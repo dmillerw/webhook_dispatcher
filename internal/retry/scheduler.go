@@ -73,6 +73,23 @@ func (s *Scheduler) processRetries() {
 
 	// Submit each retry to worker pool
 	for _, entry := range entries {
+		// Safety check: skip if already exceeded max attempts
+		if entry.Attempt >= entry.Destination.RetryPolicy.MaxAttempts {
+			s.logger.Warn("skipping retry entry that exceeded max attempts",
+				"webhook_id", entry.WebhookEvent.ID,
+				"destination", entry.Destination.Name,
+				"attempt", entry.Attempt,
+				"max_attempts", entry.Destination.RetryPolicy.MaxAttempts,
+			)
+
+			// Clean up this orphaned entry
+			retryID := entry.WebhookEvent.ID + ":" + entry.Destination.ID
+			if err := s.store.Delete(retryID); err != nil {
+				s.logger.Error("failed to delete orphaned retry entry", "error", err, "retry_id", retryID)
+			}
+			continue
+		}
+
 		s.logger.Debug("retrying webhook",
 			"webhook_id", entry.WebhookEvent.ID,
 			"destination", entry.Destination.Name,

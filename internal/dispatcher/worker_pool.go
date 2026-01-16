@@ -206,7 +206,18 @@ func (p *WorkerPool) handleFailure(job *DispatchJob, errorMsg string) {
 		p.logger.Error("max retry attempts reached, giving up",
 			"webhook_id", job.Event.ID,
 			"destination", job.Destination.Name,
+			"total_attempts", job.RetryCount+1,
 		)
+
+		// Delete from retry queue if it exists
+		if job.RetryCount > 0 {
+			retryID := fmt.Sprintf("%s:%s", job.Event.ID, job.Destination.ID)
+			if err := p.retryStore.Delete(retryID); err != nil {
+				p.logger.Error("failed to delete exhausted retry entry", "error", err, "retry_id", retryID)
+			} else {
+				p.logger.Info("removed exhausted retry from queue", "retry_id", retryID)
+			}
+		}
 		return
 	}
 
