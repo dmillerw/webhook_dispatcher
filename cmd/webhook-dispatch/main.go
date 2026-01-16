@@ -212,20 +212,8 @@ func setupRouter(
 
 // registerWebhookPaths registers webhook paths with metadata extraction rules
 func registerWebhookPaths(registry *metadata.Registry) {
-	// GitHub webhooks
-	registry.Register("/webhooks/github", []metadata.ExtractionRule{
-		{Name: "event.type", JSONPath: "action"},
-		{Name: "event.branch", JSONPath: "ref"},
-		{Name: "repository", JSONPath: "repository.full_name"},
+	// Field Nation webhooks
+	registry.Register("/webhooks/fieldnation", []metadata.ExtractionRule{
+		{Name: "event.name", JSONPath: "event.name"},
 	})
-
-	// GitLab webhooks
-	registry.Register("/webhooks/gitlab", []metadata.ExtractionRule{
-		{Name: "event.type", JSONPath: "object_kind"},
-		{Name: "event.branch", JSONPath: "project.default_branch"},
-		{Name: "repository", JSONPath: "project.path_with_namespace"},
-	})
-
-	// Generic webhook (no metadata extraction)
-	registry.Register("/webhooks/generic", []metadata.ExtractionRule{})
 }
