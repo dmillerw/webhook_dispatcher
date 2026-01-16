@@ -17,7 +17,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH:-amd64} go build \
     -ldflags="-w -s -X main.Version=$(git describe --tags --always --dirty 2>/dev/null || echo 'dev')" \
     -a -installsuffix cgo \
     -o webhook-dispatch \
-    ./cmd/webhook-dispatch
+    cmd/webhook-dispatch/main.go
 
 # Final stage - minimal runtime image
 FROM alpine:latest
