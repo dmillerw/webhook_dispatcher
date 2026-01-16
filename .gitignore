@@ -1,0 +1,55 @@
+# Binaries
+webhook-dispatch
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# Data directory
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# SSL certificates
+certs/
+*.pem
+*.key
+
+# Nginx logs
+nginx/logs/
+
+# Backups
+backups/
+
+# Docker volumes
+volumes/

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Dispatch - Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Webhook Dispatch Admin</h1>
+            <button class="btn btn-primary" onclick="showAddModal()">Add Destination</button>
+        </header>
+
+        <div id="alert" class="alert" style="display: none;"></div>
+
+        <div class="destinations-list">
+            <table id="destinations-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>URL</th>
+                        <th>Method</th>
+                        <th>Filters</th>
+                        <th>Enabled</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="destinations-tbody">
+                    <tr>
+                        <td colspan="6" class="loading">Loading destinations...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Destination</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="destination-form">
+                    <input type="hidden" id="dest-id">
+
+                    <div class="form-group">
+                        <label for="dest-name">Name *</label>
+                        <input type="text" id="dest-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dest-url">URL *</label>
+                        <input type="url" id="dest-url" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dest-method">Method *</label>
+                        <select id="dest-method" required>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="PATCH">PATCH</option>
+                            <option value="GET">GET</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dest-timeout">Timeout (seconds)</label>
+                        <input type="number" id="dest-timeout" value="30" min="1" max="300">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dest-headers">Headers (JSON)</label>
+                        <textarea id="dest-headers" rows="4" placeholder='{"Content-Type": "application/json"}'>{}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dest-filters">Filters (JSON)</label>
+                        <textarea id="dest-filters" rows="6" placeholder='[{"field": "event.type", "operator": "eq", "value": "push"}]'>[]</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="dest-enabled" checked>
+                            Enabled
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

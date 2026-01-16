@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  webhook-dispatch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: webhook-dispatch:latest
+    container_name: webhook-dispatch
+    restart: unless-stopped
+    ports:
+      - "8080:8080"  # Webhook ingestion and admin UI
+      - "9090:9090"  # Prometheus metrics
+    volumes:
+      # Mount config as read-only
+      - ./configs:/app/configs:ro
+      # Persistent storage for retry queue
+      - webhook-data:/app/data
+    environment:
+      - TZ=UTC
+      # Add your secrets here or use .env file
+      # - API_TOKEN=${API_TOKEN}
+      # - SLACK_TOKEN=${SLACK_TOKEN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - webhook-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  webhook-data:
+    driver: local
+
+networks:
+  webhook-network:
+    driver: bridge

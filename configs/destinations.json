@@ -1,0 +1,43 @@
+{
+  "destinations": [
+    {
+      "id": "example-slack",
+      "name": "Slack Notifications",
+      "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout_seconds": 30,
+      "filters": [
+        {
+          "field": "event.type",
+          "operator": "in",
+          "values": ["push", "pull_request"]
+        }
+      ],
+      "enabled": true,
+      "retry_policy": {
+        "max_attempts": 10,
+        "backoff_schedule": [60, 300, 900, 3600, 21600, 86400]
+      }
+    },
+    {
+      "id": "example-webhook",
+      "name": "Example Webhook Destination",
+      "url": "https://example.com/webhook",
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${API_TOKEN}"
+      },
+      "timeout_seconds": 30,
+      "filters": [],
+      "enabled": false,
+      "retry_policy": {
+        "max_attempts": 5,
+        "backoff_schedule": [60, 300, 900]
+      }
+    }
+  ]
+}

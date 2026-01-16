@@ -1,0 +1,34 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'webhook-dispatch'
+    environment: 'production'
+
+scrape_configs:
+  - job_name: 'webhook-dispatch'
+    static_configs:
+      - targets: ['webhook-dispatch:9090']
+        labels:
+          service: 'webhook-dispatch'
+
+    # Scrape metrics every 15 seconds
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+# Alerting rules (optional)
+# rule_files:
+#   - 'alerts/*.yml'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#             - 'alertmanager:9093'
